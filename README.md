@@ -1,6 +1,6 @@
-# Weekend Warriors — Player Details Extractor
+# Player Details Extractor — Reusable Component
 
-Brief: this repository contains a Jupyter notebook that extracts player details from the team registration forms kept under the `Weekend Warriors` folder and writes a combined CSV and Excel file of players.
+Brief: this repository contains a Jupyter notebook that extracts player details from tournament team registration forms stored in a configurable input directory and writes a consolidated CSV and Excel file of players.
 
 **What it extracts**
 - player_name — full name
@@ -15,12 +15,12 @@ Brief: this repository contains a Jupyter notebook that extracts player details 
 - `main.ipynb` — the extraction notebook. Run the notebook (all cells) to scan the `Weekend Warriors` folder, save raw table exports, parse players and write a consolidated CSV and XLSX.
 
 **Where outputs land**
-- Raw table exports: `Weekend Warriors/_raw_csv/`
-- Combined CSV: `Weekend Warriors/_outputs/player_details.csv`
-- Combined Excel: `Weekend Warriors/_outputs/player_details.xlsx`
+- Raw table exports: `<input_dir>/_raw_csv/`
+- Combined CSV: `<input_dir>/_outputs/player_details.csv`
+- Combined Excel: `<input_dir>/_outputs/player_details.xlsx`
 
 **How it works (overview)**
-- The notebook scans `Weekend Warriors` for `.xlsx`, `.xls` and `.pdf` files.
+- The notebook scans a configured input directory for `.xlsx`, `.xls` and `.pdf` files. Set the input folder by changing the `ROOT_DIR` variable at the top of `main.ipynb`.
 - Excel files are read with `pandas.read_excel(header=None)` and parsed by recognizing repeated label rows such as "PLAYER DETAILS", "Jersey’s No", "Full Name", "NRIC No" and "Email No". Two layouts are handled:
   - wide roster blocks (many players across columns)
   - vertical / single-column player entries
@@ -44,8 +44,9 @@ pip install tabula-py
 ```
 
 **Running**
-1. Open `main.ipynb` in Jupyter, JupyterLab, or VS Code and run all cells.
-2. The notebook will print progress, save raw CSV exports under `_raw_csv`, and create `player_details.csv` and `player_details.xlsx` under `_outputs`.
+1. Configure the input directory in `main.ipynb` by setting the `ROOT_DIR` variable to your tournament folder (for example `Path("/path/to/my-tournament")`).
+2. Open `main.ipynb` in Jupyter, JupyterLab, or VS Code and run all cells.
+3. The notebook will print progress, save raw table exports under `_raw_csv/`, and create `player_details.csv` and `player_details.xlsx` under `_outputs/` inside the input directory.
 
 **Customizations**
 - To add `team_id` values, either:
@@ -53,8 +54,8 @@ pip install tabula-py
   - Add a mapping dict in the notebook (near the end) and map `team_name` -> `team_id` then re-run the final export cell.
 
 **Troubleshooting**
-- If the Garage 94 PDF (or any PDF) is skipped, the notebook will report that `tabula-py` is not installed. Install tabula-py and ensure Java is available to enable PDF extraction.
-- If records are missing or misaligned, inspect the corresponding `_raw_csv/<team>.csv` file (the notebook saves raw table exports) and adjust parsing regexes in the notebook.
+- If a PDF is skipped or reported as unprocessed, the notebook will indicate that `tabula-py` is not installed. Install `tabula-py` and ensure Java is available to enable PDF extraction.
+- If records are missing or misaligned, inspect the corresponding `_raw_csv/<source>.csv` file (the notebook saves raw table exports) and adjust parsing regexes in the notebook.
 
 **Next steps / improvements**
 - Add a small UI or script wrapper to run the notebook headlessly.
